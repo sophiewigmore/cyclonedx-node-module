@@ -18,10 +18,15 @@
  */
 const readInstalled = require('read-installed');
 const Bom = require('./model/Bom');
+const fs = require('fs');
 
 
 exports.createbom = (componentType, includeSerialNumber, includeLicenseText, path, options, callback) => readInstalled(path, options, (err, pkgInfo) => {
-    let bom = new Bom(pkgInfo, componentType, includeSerialNumber, includeLicenseText);
+
+  // TODO: no lockfile?
+    let lockfile = JSON.parse(fs.readFileSync(path+'/package-lock.json'));
+
+    let bom = new Bom(pkgInfo, componentType, includeSerialNumber, includeLicenseText, lockfile);
     callback(null, bom);
 });
 
